@@ -3,7 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
-import { createClient } from "@/lib/supabase/client"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client"
 
 interface User {
   id: string
@@ -37,9 +37,16 @@ function toUser(supabaseUser: SupabaseUser): User {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  // With no backend configured there is nobody to be signed in as, and nothing
+  // to wait for. Deriving the initial value rather than setting it inside the
+  // effect avoids a synchronous setState there.
+  const [loading, setLoading] = useState(isSupabaseConfigured)
 
   useEffect(() => {
+    // Nothing to subscribe to without a backend; the app renders its auth
+    // screen, which can say so, instead of the whole request 500ing.
+    if (!isSupabaseConfigured) return
+
     const supabase = createClient()
 
     supabase.auth.getUser().then(({ data }) => {
