@@ -115,7 +115,7 @@ Two cautions if you pick your own pins:
 - **GPIO 1 and 3 are the USB serial TX/RX.** This build uses GPIO 1 for CLK,
   which works but means serial output is unreliable while the panel is running.
   If you want a clean serial log for debugging, move CLK to a free pin.
-- **GPIO 34–39 are input-only** and cannot drive a panel. GPIO 6–11 are wired
+- **GPIO 34-39 are input-only** and cannot drive a panel. GPIO 6-11 are wired
   to the flash chip and must not be used at all.
 
 ---
@@ -163,8 +163,8 @@ doesn't, that's the cause.
 
 ### A DevKit-safe alternative map
 
-This avoids every strapping pin, both UART pins, the flash pins (6–11) and the
-input-only pins (34–39):
+This avoids every strapping pin, both UART pins, the flash pins (6-11) and the
+input-only pins (34-39):
 
 | Signal | GPIO | | Signal | GPIO |
 | --- | ---: | --- | --- | ---: |
@@ -273,7 +273,7 @@ way to confirm orientation and chain order without reading serial logs.
 | Nothing lights at all | Panel 5V absent, or no shared ground with the ESP32 |
 | Flickering, dim, or random pixels | Undersized supply, or missing common ground |
 | Colours wrong (red↔blue) | R and B lines swapped - check pins 1/3 and 5/7 |
-| Top half fine, bottom half dark | R2/G2/B2 (pins 5–7) not connected |
+| Top half fine, bottom half dark | R2/G2/B2 (pins 5-7) not connected |
 | Image doubled or squashed vertically | Wrong scan rate - check pin 8 (E) and `PANEL_RES_Y` |
 | Panels in the wrong order | `PANEL_CHAIN_TYPE` doesn't match how you wired the chain |
 | Serial monitor unreadable | GPIO 1 is CLK on this build - see the caution above |

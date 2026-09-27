@@ -9,6 +9,14 @@ hardware. Once content is pushed, the website can be closed: the panel keeps the
 time, fetches its own weather, animates locally, and rotates playlists on its
 own timers.
 
+| Sign in | Sprite contact sheet |
+|:---:|:---:|
+| <img src="docs/screenshots/sign-in.jpg" alt="Sign-in screen for the RGB Display Manager"/> | <img src="docs/screenshots/sprite-sheet.jpg" alt="Contact sheet of 8 characters by 9 emotes"/> |
+
+The contact sheet at `/sprite-sheet` is rendered by the same sprite data that
+generates the Arduino header, so it is the quickest way to see whether the
+website and the firmware still agree.
+
 ## What it does
 
 **Scenes.** A scene is a stack of elements on a pixel canvas - text, scrolling
@@ -76,3 +84,36 @@ For the hardware side - the 16-pin HUB75 connector, GPIO map, power and
 chaining - see **[Arduino_code/README.md](Arduino_code/README.md)**. For
 flashing and configuring the firmware, see
 **[Arduino_code/SETUP.md](Arduino_code/SETUP.md)**.
+
+## Running the checks
+
+```bash
+npm ci
+npm run lint
+npm run typecheck
+npm test          # 257 tests, no network and no broker needed
+npm run build
+ops/hygiene.sh
+```
+
+CI runs all of it on push and pull request, plus an `npm audit --audit-level=high`.
+That audit job exists because this repo carried a critical unauthenticated RCE
+in Next (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4) with nothing watching for it.
+
+## Running it without a backend
+
+The app needs Supabase. Without it you get the sign-in screen and a clear 503
+from the API rather than a stack trace, which is enough to check the UI builds
+and renders:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL= NEXT_PUBLIC_SUPABASE_ANON_KEY= npm run dev
+```
+
+Use `http://localhost:3000`, not `127.0.0.1`: Next blocks its own dev assets
+across origins, and the page comes up blank with the reason only in the server
+log.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

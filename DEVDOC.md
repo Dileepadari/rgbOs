@@ -216,3 +216,64 @@ a sample `.raw` fixture.
 
 `app/sprite-sheet/` is a dev page rendering every character × emote at panel
 scale - the practical way to review sprite changes.
+
+## 10. What this pass changed, and why it matters
+
+**The MQTT publisher leaked a client per publish during an outage.** `ensureClient()`
+built a client with `reconnectPeriod: 1000`, so mqtt.js retried on its own; the
+`close` handler then ran a second, hand-rolled backoff and set `client = null`
+without calling `end()`. The reference went, the object did not: it kept retrying
+once a second for the life of the process, and the next publish stacked another
+on top. Measured with no broker listening, counting the module's own
+"connection closed" lines:
+
+```
+after 1 publish :  6 closes in 4s
+after 2 publishes: 15 closes in 4s
+after 3 publishes: 22 closes in 4s
+```
+
+The hand-rolled counter capped at 10 and only reset on a successful connect, so
+after ten failures the module's own reconnection was off permanently. There is
+now one client, one reconnect mechanism (mqtt.js's), `end()` before replacement,
+and a bounded queue that drops the oldest messages.
+
+`__setClientFactory` is a test seam. The old test called the real client, opened
+a TCP connection to localhost:1883, failed, and left timers running for the rest
+of the suite - while asserting only that the return value was a boolean.
+
+**`/api/mqtt/publish` trusted the device id.** It checked that you were signed
+in and then put `deviceId` straight into `devices/<id>/command`. It never asked
+the database whose device that was, so any authenticated user could command any
+device. The `devices` table has RLS keyed on `user_id`; nothing was querying it.
+The route now looks the device up as the caller, so another user's device simply
+is not there, and the id is constrained to characters that cannot escape the
+topic (`/`, `+` and `#` are separators and wildcards).
+
+**An unconfigured deployment returned 500 for everything.** `proxy.ts` read the
+Supabase env vars with `!`, so `createServerClient` threw inside middleware and
+every request, static pages included, got a framework stack trace. It now
+returns a 503 naming the missing variables for API routes and lets pages
+through, so the UI can render and say what is wrong.
+
+**`lib/supabase/middleware.ts` was dead.** It exported an `updateSession` that
+nothing imported, duplicating the session gate in `proxy.ts` with *different*
+behaviour. Two copies of an auth check, one of them unreachable, is a trap:
+fixing a bug in one leaves the other wrong. Deleted.
+
+**Five dependencies were pinned to `latest`.** `@supabase/supabase-js`, `mqtt`,
+`recharts`, `swr` and `@vercel/analytics`. A fresh install could pull a breaking
+major with no change to `package.json`, so two checkouts of the same commit
+built different applications. All now carets at the versions that were actually
+installed.
+
+**`npm test` was bare `vitest`**, which is watch mode. In CI it would have hung
+until cancelled. It is `vitest run` now, with `test:watch` for the interactive one.
+
+**A critical Next RCE was outstanding.** GHSA-p293-qw3h-jr36 and
+GHSA-2xp9-vwfh-vxw4, unauthenticated, plus criticals in vitest and highs in
+postcss, sharp, js-yaml, nanoid and browserslist. All cleared; the audit job in
+CI is there so the next one is noticed.
+
+**`dev-server.log` was committed**, and `next dev` writes an `AGENTS.md` into
+the working tree on every run that nothing was ignoring.

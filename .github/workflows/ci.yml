@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # `npm test` is `vitest run`. It used to be bare `vitest`, which is watch
+      # mode and would have hung here forever.
+      - name: Tests
+        run: npm test
+
+      # No NEXT_PUBLIC_SUPABASE_* here on purpose: the build must not need a
+      # live backend.
+      - name: Build
+        run: npm run build
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      # This repo shipped a critical unauthenticated RCE in Next for some time
+      # (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4) with nothing watching.
+      - name: Audit
+        run: npm audit --audit-level=high
+
+  firmware:
+    name: Firmware parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      # The web app and the Arduino sketch share a character set and a command
+      # shape. scripts/firmware-parity.test.ts and characters-header.test.ts
+      # are what stop them drifting apart silently.
+      - name: Parity tests
+        run: npx vitest run scripts/
+
+  hygiene:
+    name: Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ops/hygiene.sh
