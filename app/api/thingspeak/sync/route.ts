@@ -12,13 +12,33 @@ interface ThingSpeakData {
   field8?: string
 }
 
+// ThingSpeak identifies a channel by its write key, not by a parameter, so a
+// numeric id is all this can ever be. Validated rather than interpolated
+// blindly: on the GET below it lands in the request path just ahead of the
+// server's real API key, so a value containing ? or / could reach a different
+// ThingSpeak endpoint carrying that key.
+const CHANNEL_ID = /^[0-9]+$/
+
 export async function POST(request: NextRequest) {
   try {
     const body: ThingSpeakData = await request.json()
     const { channel_id } = body
 
-    if (!channel_id) {
-      return NextResponse.json({ error: "Channel ID required" }, { status: 400 })
+    if (!channel_id || !CHANNEL_ID.test(String(channel_id))) {
+      return NextResponse.json({ error: "Numeric channel ID required" }, { status: 400 })
+    }
+
+    // channel_id used to be required and then ignored. /update writes to
+    // whichever channel the write key belongs to, so a caller naming a
+    // different channel got {"success": true} while the data went to this
+    // server's one. Checking it against the configured channel makes the
+    // parameter mean what it looks like it means.
+    const configuredChannel = process.env.NEXT_PUBLIC_THINGSPEAK_CHANNEL_ID
+    if (configuredChannel && String(channel_id) !== configuredChannel) {
+      return NextResponse.json(
+        { error: "channel_id does not match the channel this server writes to" },
+        { status: 403 },
+      )
     }
 
     // Validate ThingSpeak API key from environment
@@ -70,13 +90,18 @@ export async function GET(request: NextRequest) {
     const channelId = request.nextUrl.searchParams.get("channel_id")
     const thingSpeakApiKey = process.env.THINGSPEAK_API_KEY
 
-    if (!channelId || !thingSpeakApiKey) {
-      return NextResponse.json({ error: "Missing parameters" }, { status: 400 })
+    if (!channelId || !CHANNEL_ID.test(channelId)) {
+      return NextResponse.json({ error: "Numeric channel ID required" }, { status: 400 })
+    }
+    if (!thingSpeakApiKey) {
+      return NextResponse.json({ error: "ThingSpeak API key not configured" }, { status: 500 })
     }
 
-    const response = await fetch(
-      `https://api.thingspeak.com/channels/${channelId}/feeds.json?api_key=${thingSpeakApiKey}&results=1`,
-    )
+    const url = new URL(`https://api.thingspeak.com/channels/${channelId}/feeds.json`)
+    url.searchParams.set("api_key", thingSpeakApiKey)
+    url.searchParams.set("results", "1")
+
+    const response = await fetch(url)
 
     if (!response.ok) {
       throw new Error(`ThingSpeak API error: ${response.statusText}`)

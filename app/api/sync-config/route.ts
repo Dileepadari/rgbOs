@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Sensitive values like API keys are kept server-side only
     return NextResponse.json({
@@ -16,29 +16,21 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-
-    // Only allow updating non-sensitive fields
-    const allowedFields = ["mqttBroker", "mqttPort", "syncInterval"]
-    const updates: Record<string, unknown> = {}
-
-    for (const field of allowedFields) {
-      if (field in body) {
-        updates[field] = body[field]
-      }
-    }
-
-    // In a real implementation, you would save this to a database
-    // For now, we just validate and return success
-    return NextResponse.json({
-      success: true,
-      message: "Configuration updated (server-side only)",
-      updated: updates,
-    })
-  } catch (error) {
-    console.error("Config update error:", error)
-    return NextResponse.json({ error: "Failed to update config" }, { status: 500 })
-  }
+// Not implemented, and it says so.
+//
+// This used to accept a body, pick three fields out of it, save nothing, and
+// answer `{"success": true, "message": "Configuration updated"}`. A caller had
+// no way to tell that its settings had gone nowhere. These values come from
+// the environment (see GET above), so changing them is a redeploy, not an API
+// call - until there is somewhere to persist them, 501 is the honest answer.
+export async function POST() {
+  return NextResponse.json(
+    {
+      error: "not_implemented",
+      detail:
+        "Sync configuration is read from the environment. Change NEXT_PUBLIC_MQTT_BROKER, " +
+        "NEXT_PUBLIC_MQTT_PORT or NEXT_PUBLIC_SYNC_INTERVAL and redeploy.",
+    },
+    { status: 501 },
+  )
 }
