@@ -9,13 +9,24 @@ hardware. Once content is pushed, the website can be closed: the panel keeps the
 time, fetches its own weather, animates locally, and rotates playlists on its
 own timers.
 
-| Sign in | Sprite contact sheet |
+| The wall, right now | Scene editor |
 |:---:|:---:|
-| <img src="docs/screenshots/sign-in.jpg" alt="Sign-in screen for the RGB Display Manager"/> | <img src="docs/screenshots/sprite-sheet.jpg" alt="Contact sheet of 8 characters by 9 emotes"/> |
+| <img src="docs/screenshots/01-dashboard.jpg" alt="Dashboard showing what each panel is displaying, device and scene counts, and an activity feed of pushes and mood changes"/> | <img src="docs/screenshots/02-scene-editor.jpg" alt="Scene editor with a live preview of the panel, the element stack - image, text, scrolling text, icon, clock, weather - and a properties pane"/> |
+| **Dashboard** <br> <sub>Every panel and what it is showing, with the last push, mood and status change.</sub> | **Scenes** <br> <sub>Elements stacked on a pixel canvas, previewed at the panel's real size.</sub> |
 
-The contact sheet at `/sprite-sheet` is rendered by the same sprite data that
-generates the Arduino header, so it is the quickest way to see whether the
-website and the firmware still agree.
+| Playlists | Moods | Devices |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/03-playlists.jpg" alt="Playlist manager showing a rotation of two scenes with loop on and shuffle off"/> | <img src="docs/screenshots/04-moods.jpg" alt="Moods: focus, creative, relaxed and energetic, each a character and an emote, with a panel to send one to"/> | <img src="docs/screenshots/05-devices.jpg" alt="Device management showing a registered panel with its size, brightness and last-seen time"/> |
+| **Playlists** <br> <sub>Rotate scenes, each for a duration, cached on the device.</sub> | **Moods** <br> <sub>A character walks on, performs an emote over what is playing, then stays or leaves.</sub> | **Devices** <br> <sub>Panel size, brightness and whether it has checked in.</sub> |
+
+The sprite contact sheet at `/sprite-sheet` is rendered by the same sprite data
+that generates the Arduino header, so it is the quickest way to see whether the
+website and the firmware still agree:
+
+<img src="docs/screenshots/sprite-sheet.jpg" alt="Contact sheet of 8 characters by 9 emotes" width="620"/>
+
+There is a light theme as well; the same two screens are in
+[`docs/screenshots/light/`](docs/screenshots/light).
 
 ## What it does
 
