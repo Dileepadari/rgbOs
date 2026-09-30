@@ -22,7 +22,7 @@
 
 <br><br>
 
-**Live:** [rgbos.dileepadari.dev](https://rgbos.dileepadari.dev) &middot; **[Developer documentation](./DEVDOC.md)** &middot; [Screenshots](#screenshots) &middot; [What it does](#what-it-does) &middot; [Getting started](#getting-started)
+**Live:** [rgbos.dileepadari.dev](https://rgbos.dileepadari.dev) &middot; **[Developer documentation](./DEVDOC.md)** &middot; [Screenshots](#screenshots) &middot; [Responsive](#responsive-layout) &middot; [What it does](#what-it-does) &middot; [Getting started](#getting-started)
 
 <p><b>Dark mode</b> &middot; <a href="./README-light.md">View this page in light mode</a></p>
 
@@ -67,6 +67,33 @@ in light mode is at **[README-light.md](./README-light.md)**.
     <td width="33%" valign="top">
       <img src="./docs/screenshots/dark/05-devices.jpg" alt="Device management showing a registered panel with its size, brightness and last-seen time" loading="lazy">
       <p align="center"><b>Devices</b><br><sub>Panel size, brightness and whether it has checked in.</sub></p>
+    </td>
+  </tr>
+</table>
+
+## Responsive layout
+
+Each image is its own 390x780 phone viewport, not a scaled-down desktop shot:
+the sidebar collapses behind the menu button, the hero actions wrap, and the
+stat grid folds to two columns.
+
+<table>
+  <tr>
+    <td width="25%" valign="top">
+      <img src="./docs/screenshots/responsive/dark/mobile-dashboard.jpg" alt="Dashboard on a 390x780 phone viewport" loading="lazy">
+      <p align="center"><sub><b>Dashboard</b><br>390 x 780</sub></p>
+    </td>
+    <td width="25%" valign="top">
+      <img src="./docs/screenshots/responsive/dark/mobile-scenes.jpg" alt="Scene list on a 390x780 phone viewport" loading="lazy">
+      <p align="center"><sub><b>Scenes</b><br>390 x 780</sub></p>
+    </td>
+    <td width="25%" valign="top">
+      <img src="./docs/screenshots/responsive/dark/mobile-playlists.jpg" alt="Playlist manager on a 390x780 phone viewport" loading="lazy">
+      <p align="center"><sub><b>Playlists</b><br>390 x 780</sub></p>
+    </td>
+    <td width="25%" valign="top">
+      <img src="./docs/screenshots/responsive/dark/mobile-moods.jpg" alt="Moods on a 390x780 phone viewport" loading="lazy">
+      <p align="center"><sub><b>Moods</b><br>390 x 780</sub></p>
     </td>
   </tr>
 </table>
