@@ -24,7 +24,7 @@
 
 **Live:** [rgbos.dileepadari.dev](https://rgbos.dileepadari.dev) &middot; **[Developer documentation](./DEVDOC.md)** &middot; [Screenshots](#screenshots) &middot; [What it does](#what-it-does) &middot; [Getting started](#getting-started)
 
-<p><b>Dark mode</b> &middot; <a href="./README-light.md">View this page in light mode</a></p>
+<p><a href="./README.md">View this page in dark mode</a> &middot; <b>Light mode</b></p>
 
 </div>
 
@@ -38,17 +38,17 @@ own timers.
 
 ## Screenshots
 
-Real renders of the running app. This page shows **dark mode**; the same gallery
-in light mode is at **[README-light.md](./README-light.md)**.
+Real renders of the running app. This page shows **light mode**; the same gallery
+in dark mode is at **[README.md](./README.md)**.
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="./docs/screenshots/dark/01-dashboard.jpg" alt="Dashboard showing what each panel is displaying, device and scene counts, and an activity feed of pushes and mood changes" loading="lazy">
+      <img src="./docs/screenshots/light/01-dashboard.jpg" alt="Dashboard showing what each panel is displaying, device and scene counts, and an activity feed of pushes and mood changes" loading="lazy">
       <p align="center"><b>The wall, right now</b><br><sub>Every panel and what it is showing, with the last push, mood and status change.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="./docs/screenshots/dark/02-scene-editor.jpg" alt="Scene editor with a live preview of the panel, the element stack - image, text, scrolling text, icon, clock, weather - and a properties pane" loading="lazy">
+      <img src="./docs/screenshots/light/02-scene-editor.jpg" alt="Scene editor with a live preview of the panel, the element stack - image, text, scrolling text, icon, clock, weather - and a properties pane" loading="lazy">
       <p align="center"><b>Scene editor</b><br><sub>Elements stacked on a pixel canvas, previewed at the panel's real size.</sub></p>
     </td>
   </tr>
@@ -57,15 +57,15 @@ in light mode is at **[README-light.md](./README-light.md)**.
 <table>
   <tr>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/03-playlists.jpg" alt="Playlist manager showing a rotation of two scenes with loop on and shuffle off" loading="lazy">
+      <img src="./docs/screenshots/light/03-playlists.jpg" alt="Playlist manager showing a rotation of two scenes with loop on and shuffle off" loading="lazy">
       <p align="center"><b>Playlists</b><br><sub>Rotate scenes, each for a duration, cached on the device.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/04-moods.jpg" alt="Moods: focus, creative, relaxed and energetic, each a character and an emote, with a panel to send one to" loading="lazy">
+      <img src="./docs/screenshots/light/04-moods.jpg" alt="Moods: focus, creative, relaxed and energetic, each a character and an emote, with a panel to send one to" loading="lazy">
       <p align="center"><b>Moods</b><br><sub>A character walks on, performs an emote over what is playing, then leaves.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/05-devices.jpg" alt="Device management showing a registered panel with its size, brightness and last-seen time" loading="lazy">
+      <img src="./docs/screenshots/light/05-devices.jpg" alt="Device management showing a registered panel with its size, brightness and last-seen time" loading="lazy">
       <p align="center"><b>Devices</b><br><sub>Panel size, brightness and whether it has checked in.</sub></p>
     </td>
   </tr>
